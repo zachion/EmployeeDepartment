@@ -1,0 +1,45 @@
+﻿@model EmployeeManager.Models.Employee
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet">
+
+<div>
+    <div class="row">
+        <div class="col-md-8">
+            <form id="employeeForm">
+                <input type="hidden" asp-for="ItemId" />
+                <div class="form-group">
+                    <label asp-for="EmployeeFirstName" class="control-label">First Name</label>
+                    <input asp-for="EmployeeFirstName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="EmployeeLastName" class="control-label">Last Name</label>
+                    <input asp-for="EmployeeLastName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="EmployeeDepartment" class="control-label"></label>
+                    <select asp-for="EmployeeDepartment" class="form-control">
+                        <option value="">-- Select Department --</option>
+                        <option value="Accounts">Accounts</option>
+                        <option value="HR">HR</option>
+                        <option value="IT">IT</option>
+                        <option value="Project Management">Project Management</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EmployeeEmail" class="control-label"></label>
+                    <input asp-for="EmployeeEmail" class="form-control" />
+                </div>
+                <div class="form-group" id="calender-container">
+                    <label asp-for="EmployeeBirthDate" class="control-label"></label>
+                    <div class="input-group date">
+                        <input asp-for="EmployeeBirthDate" type="text" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="button" id="btnSubmit" class="btn btn-block btn-info">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

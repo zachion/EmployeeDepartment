@@ -1,0 +1,158 @@
+﻿@model IEnumerable<EmployeeManager.Models.Employee>
+
+@{
+    ViewData["Title"] = "Personal Employee Manager";
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet">
+
+<h2>Personal Employee Manager</h2>
+<br />
+<div>
+    <div style="float:left">
+        <button class="btn btn-primary" onclick="AddEditEmployees(0)">Add Employee</button>
+        <button class="btn btn-success" onclick="AddEditDepartment(0)">Add Department</button>
+    </div>
+    <div style="float:right; width:40%;">
+        <form asp-controller="Employee" asp-action="Index" class="form-group">
+            <div class="col-sm-6">
+                <input class="form-control" type="text" name="SearchString" placeholder="Search">
+            </div>
+            <button type="submit" class="btn btn-default btn-info">Filter</button>
+        </form>
+    </div>
+</div>
+<br />
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.ItemId)</th>
+            <th>@Html.DisplayNameFor(model => model.EmployeeFirstName)</th>
+            <th>@Html.DisplayNameFor(model => model.EmployeeLastName)</th>
+            <th>@Html.DisplayNameFor(model => model.EmployeeEmail)</th>
+            <th>@Html.DisplayNameFor(model => model.EmployeeBirthDate)</th>
+            <th>@Html.DisplayNameFor(model => model.EmployeeDepartment)</th>
+            <th>Action Item</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.ItemId)</td>
+            <td>@Html.DisplayFor(modelItem => item.EmployeeFirstName)</td>
+            <td>@Html.DisplayFor(modelItem => item.EmployeeLastName)</td>
+            <td>@Html.DisplayFor(modelItem => item.EmployeeEmail)</td>
+            <td>@Html.DisplayFor(modelItem => item.EmployeeBirthDate)</td>
+            <td>@Html.DisplayFor(modelItem => item.EmployeeDepartment)</td>
+            <td>
+                <button class="btn btn-default" onclick="AddEditEmployees(@item.ItemId)">Edit</button>
+                <button class="btn btn-danger" onclick="DeleteEmployee(@item.ItemId)">Delete</button>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="employeeFormModel" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h3 id="title" class="modal-title">Add Employee</h3>
+            </div>
+            <div class="modal-body" id="employeeFormModelDiv">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="employeeReportModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h3 class="modal-title">Employee Report</h3>
+            </div>
+            <div class="modal-body" id="employeeReportModalDiv">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var AddEditEmployees = function (itemId) {
+        var url = "/Employee/AddEditEmployees?itemId=" + itemId;
+        if (itemId > 0)
+            $('#title').html("Edit Employee");
+
+        $("#employeeFormModelDiv").load(url, function () {
+            $("#employeeFormModel").modal("show");
+
+        });
+
+        $('#employeeFormModel').on('shown.bs.modal', function () {
+
+            $('#calender-container .input-group.date').datepicker({
+                todayBtn: true,
+                calendarWeeks: true,
+                todayHighlight: true,
+                autoclose: true,
+                container: '#employeeFormModel modal-body'
+            });
+
+        });
+    }
+
+    var AddEditDepartment = function (itemId) {
+        debugger;
+        var url = "/Department/AddEditDepartments?itemId=" + itemId;
+         $('#title').html("Edit Department");
+        debugger;
+        $("#departmentFormModelDiv").load(url, function () {
+            debugger;
+            $("#departmentFormModel").modal("show");
+
+        });
+    }
+
+    var DeleteEmployee = function (itemId) {
+
+        var ans = confirm("Do you want to delete item with Item Id: " + itemId);
+
+        if (ans) {
+            $.ajax({
+                type: "POST",
+                url: "/Employee/Delete/" + itemId,
+                success: function () {
+                    window.location.href = "/Employee/Index";
+                }
+            })
+        }
+    }
+</script>
+
+<script>
+
+    $('body').on('click', "#btnSubmit", function () {
+        var myformdata = $("#employeeForm").serialize();
+
+        $.ajax({
+            type: "POST",
+            url: "/Employee/Create",
+            data: myformdata,
+            success: function () {
+                $("#myModal").modal("hide");
+                window.location.href = "/Employee/Index";
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        })
+    })
+</script>
